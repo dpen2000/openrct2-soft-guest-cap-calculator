@@ -11,6 +11,7 @@ var notifyOnIncrease = context.sharedStorage.get("soft_guest_cap_calculator.noti
 var notifyOnDecrease = context.sharedStorage.get("soft_guest_cap_calculator.notifyOnDecrease", false);
 
 var last = 0;
+var max = 0;
 
 function prepareNotify(forceNotify) {
 	var sgc = park.suggestedGuestMaximum;
@@ -26,6 +27,9 @@ function notify(wording, sgc) {
 	var text = "soft guest cap " + wording + " " + sgc;
 	if (scenario.objective.type === "guestsBy" || scenario.objective.type === "guestsAndRating")
 		text += " (" + Math.floor(100 * sgc / scenario.objective.guests) + "%)";
+	if (sgc > max)
+		max = sgc;
+	text += " [Max value seen: " + max + "]";
 	park.postMessage({
 		type: "blank",
 		text: text,
